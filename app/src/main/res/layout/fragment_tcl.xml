@@ -1,0 +1,14 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    tools:context="com.judgingmoloch.ftdiweb.tcl.TclFragment">
+
+    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+        android:text="Currently this doesn't do anything. Eventually (hopefully) this will be used to run Tcl scripts. Potential ways to do this might be: 1) JTcl: Adapted to Android, but potentially a bit hairy 2) AndroWish: Fully built app, but kept crashing when I tried to run Tcl scripts without displaying an error message (probably something to do with reading and writing through the port)" />
+
+</FrameLayout>

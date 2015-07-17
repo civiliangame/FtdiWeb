@@ -1,0 +1,204 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        tools:context="com.judgingmoloch.ftdiweb.RunCodeFragment">
+
+        <!-- Instruction name -->
+
+        <TextView
+            android:id="@+id/instruction_name"
+            android:textSize="25sp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Instruction description -->
+
+        <TextView
+            android:id="@+id/instruction_description"
+            android:textSize="@dimen/default_text_size"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Instruction body -->
+
+        <TextView
+            android:id="@+id/instruction_body"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textSize="@dimen/default_text_size"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Attempt at reverse compiling -->
+
+        <TextView
+            android:id="@+id/instruction_uncompile"
+            android:paddingBottom="20dp"
+            android:textSize="@dimen/default_text_size"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Holds connection status information -->
+
+        <TextView
+            android:id="@+id/connection_status"
+            android:textSize="@dimen/default_text_size"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Selection spinners for setting connection parameters -->
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:gravity="center_vertical"
+                android:width="@dimen/text_view_width"
+                android:text="Baud Rate"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/baud_rate_spinner"
+                android:layout_gravity="end"
+                android:layout_width="@dimen/spinner_width"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:gravity="center_vertical"
+                android:width="@dimen/text_view_width"
+                android:text="Stop Bit"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/stop_bit_spinner"
+                android:layout_gravity="end"
+                android:layout_width="@dimen/spinner_width"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:gravity="center_vertical"
+                android:width="@dimen/text_view_width"
+                android:text="Data Bit"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/data_bit_spinner"
+                android:layout_gravity="end"
+                android:layout_width="@dimen/spinner_width"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:gravity="center_vertical"
+                android:width="@dimen/text_view_width"
+                android:text="Parity Bit"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/parity_bit_spinner"
+                android:layout_gravity="end"
+                android:layout_width="@dimen/spinner_width"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:gravity="center_vertical"
+                android:width="@dimen/text_view_width"
+                android:text="Flow"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/flow_spinner"
+                android:layout_gravity="end"
+                android:layout_width="@dimen/spinner_width"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:gravity="center_vertical"
+                android:width="@dimen/text_view_width"
+                android:text="Port"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/port_spinner"
+                android:layout_gravity="end"
+                android:layout_width="@dimen/spinner_width"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/status_text"
+            android:textSize="@dimen/default_text_size"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Connect to device button -->
+
+        <Button
+            android:id="@+id/connect"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/default_text_size"
+            android:text="Connect" />
+
+        <!-- Run instructions button -->
+
+        <Button
+            android:id="@+id/run_instructions"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/default_text_size"
+            android:text="Run" />
+
+        <!-- Output -->
+
+        <TextView
+            android:id="@+id/output"
+            android:textSize="@dimen/default_text_size"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</ScrollView>
