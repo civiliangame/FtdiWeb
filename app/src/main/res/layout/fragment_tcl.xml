@@ -1,14 +1,32 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent" >
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    tools:context="com.judgingmoloch.ftdiweb.tcl.TclFragment">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.judgingmoloch.ftdiweb.RunCodeFragment">
 
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="Currently this doesn't do anything. Eventually (hopefully) this will be used to run Tcl scripts. Potential ways to do this might be: 1) JTcl: Adapted to Android, but potentially a bit hairy 2) AndroWish: Fully built app, but kept crashing when I tried to run Tcl scripts without displaying an error message (probably something to do with reading and writing through the port)" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/run_code"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/default_text_size"
+        android:text="Run" />
+
+    <TextView
+        android:id="@+id/data_output"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+
+</ScrollView>

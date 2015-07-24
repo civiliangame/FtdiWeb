@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.ftdi.j2xx.D2xxManager;
 import com.judgingmoloch.ftdiweb.connection.Instructions;
 import com.judgingmoloch.ftdiweb.connection.ListAllFragment;
+import com.judgingmoloch.ftdiweb.driver.AndroidDriver;
 import com.judgingmoloch.ftdiweb.settings.Settings;
 import com.judgingmoloch.ftdiweb.settings.SettingsFragment;
 import com.judgingmoloch.ftdiweb.tcl.TclFragment;
@@ -56,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     public Settings settings;
     public Instructions instructions;
+    public AndroidDriver driver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         } catch (D2xxManager.D2xxException e) {
             e.printStackTrace();
         }
+
+        driver = new AndroidDriver(this);
 
         // These are the default instructions; new ones should be downloaded
         instructions = new Instructions("Nothing", "No instructions set", "", 0);

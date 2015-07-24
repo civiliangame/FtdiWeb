@@ -20,6 +20,8 @@ import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
 import com.judgingmoloch.ftdiweb.compiler.FTDICompiler;
 import com.judgingmoloch.ftdiweb.connection.Instructions;
+import com.judgingmoloch.ftdiweb.driver.AndroidDriver;
+import com.judgingmoloch.ftdiweb.utils.Utils;
 
 public class RunCodeFragment extends Fragment {
     private final String TAG = "RunCodeFragment";
@@ -54,15 +56,13 @@ public class RunCodeFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             if (iavailable > 0) {
-                output.append(bytesToString(readData));
+                output.append(Utils.bytesToString(readData));
             }
         }
     };
 
     private MainActivity parentContext;
     private Instructions instructions;
-
-    private ContextMenu contextMenu;
 
     /* Text Views */
     TextView name;
@@ -382,7 +382,7 @@ public class RunCodeFragment extends Fragment {
         ftDev.restartInTask();
 
         String writeData = instructions.body;
-        byte[] outData = stringToBytes(writeData);
+        byte[] outData = Utils.stringToBytes(writeData);
 
         // Write bytes one at a time
         
@@ -408,33 +408,6 @@ public class RunCodeFragment extends Fragment {
         Log.d(TAG, ">==< Wrote " + s + " to device >==<");
 
         Toast.makeText(parentContext, "Wrote \"" + s + "\" to device", Toast.LENGTH_SHORT).show();
-    }
-
-    // Converts byte to string the coorect way
-    public String bytesToString(byte[] b) {
-        String s = "";
-
-        for (int i = 0; i < b.length; i++) {
-            s += String.format("%02x ", b[i]);
-        }
-
-        return s;
-    }
-
-    // Converts string to byte the correct way
-    public byte[] stringToBytes(String x) {
-        String[] s = x.split(" |\n|,");
-        byte[] r = new byte[s.length];
-
-        for (int i = 0; i < s.length; i++) {
-            try {
-                r[i] = (byte) Integer.parseInt(s[i].toLowerCase(), 16);
-            } catch (Exception e) {
-                r[i] = (byte) 0x00;
-            }
-        }
-
-        return r;
     }
 
     @Override

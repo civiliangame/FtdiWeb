@@ -1,22 +1,28 @@
 package com.judgingmoloch.ftdiweb.compiler;
 
+import java.util.Scanner;
+
 public class FTDICompiler {
-    /**
-     * Uncompiles string
-     */
-    public static String uncompile(String input) {
-        String[] toRead = input.split(" |\n");
-        String r = "";
-        int n;
-        for (String s : toRead) {
+    private static Scanner s;
+
+    public static void main(String... args) {
+        // Can use this class to interpret and uninterpret commands
+//		interpreter();
+//		uninterpreter();
+    }
+
+    public static byte[] toBytes(String x) {
+        String[] s = x.split(" |\n|,");
+        byte[] r = new byte[s.length];
+
+        for (int i = 0; i < s.length; i++) {
             try {
-                n = Integer.parseInt(s, 16);
+                r[i] = (byte) Integer.parseInt(s[i].toLowerCase(), 16);
             } catch (Exception e) {
-                r += s + "\n";
-                continue;
+                r[i] = (byte) 0x00;
             }
-            r += uncompile((byte) n) + "\n";
         }
+
         return r;
     }
 
@@ -28,15 +34,15 @@ public class FTDICompiler {
     }
 
     /**
-     * Uncompiler: Given a binary command, figure out what it is in as assembly language
+     * uncompile: Given a binary command, figure out what it is in as assembly language
      */
     public static String uncompile(byte output) {
-        String command, action;
+        String action;
 
         if ((output & 0x80) == 0) {
-            action = "(RD)";
+            action = "RD";
         } else {
-            action = "(WR)";
+            action = "WR";
         }
 
         switch(output & 0x7F) {
@@ -70,7 +76,7 @@ public class FTDICompiler {
     }
 
     /**
-     * Compiler: Turn a command and an action into a bit representation
+     * compile: Turn a command and an action into a bit representation
      */
     public static byte compile(String command, String action) {
         byte rd_wr;
@@ -111,4 +117,40 @@ public class FTDICompiler {
         }
     }
 
+    public static final String[] ADDRESSES = {
+            "CPU_ID_LO",	"CPU_ID_HI",	"CPU_CTL",
+            "CPU_STAT",		"MEM_CTL",		"MEM_ADDR",
+            "MEM_DATA",		"MEM_CNT",		"BRK0_CTL",
+            "BRK0_STAT",	"BRK0_ADDR0",	"BRK0_ADDR1",
+            "BRK1_CTL",		"BRK1_STAT",	"BRK1_ADDR0",
+            "BRK1_ADDR1",	"BRK2_CTL",		"BRK2_STAT",
+            "BRK2_ADDR0",	"BRK2_ADDR1",	"BRK3_CTL",
+            "BRK3_STAT",	"BRK3_ADDR0",	"BRK3_ADDR1",
+            "CPU_NR",
+    };
+
+	/* ABOUT
+	 * First bit (i.e. 0x80 or 0b10000000): Set to write, otherwise read
+	 * Second bit (i.e. 0x40 or 0b01000000): Set for 8 bit, otherwise 16 bit
+	 * Rest: Address to particular register
+	 */
+
+    /**
+     * Uncompiles string
+     */
+    public static String uncompile(String input) {
+        String[] toRead = input.split(" |\n");
+        String r = "";
+        int n;
+        for (String s : toRead) {
+            try {
+                n = Integer.parseInt(s, 16);
+            } catch (Exception e) {
+                r += s + "\n";
+                continue;
+            }
+            r += uncompile((byte) n) + "\n";
+        }
+        return r;
+    }
 }

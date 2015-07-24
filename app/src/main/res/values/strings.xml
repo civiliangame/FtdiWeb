@@ -5,7 +5,7 @@
         <item>Device Information</item>
         <item>Select Process</item>
         <item>Run Data</item>
-        <item>Run Tcl Script</item>
+        <item>Run Program</item>
     </string-array>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
