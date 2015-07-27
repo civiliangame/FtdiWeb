@@ -384,8 +384,19 @@ public class RunCodeFragment extends Fragment {
         String writeData = instructions.body;
         byte[] outData = Utils.stringToBytes(writeData);
 
+        // Check to make sure we have at least something to write
+        boolean found = false;
+        for (byte b : outData) {
+            if (b != 0) {
+                found = true;
+            }
+        }
+        if (!found) {
+            Log.e(TAG, "Data to write as all 0's!");
+            return;
+        }
+
         // Write bytes one at a time
-        
         for (byte b : outData) {
             byte[] v = { b };
             int result = ftDev.write(v);

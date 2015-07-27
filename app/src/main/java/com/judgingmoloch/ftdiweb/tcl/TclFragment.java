@@ -50,7 +50,7 @@ public class TclFragment extends Fragment {
         // Add output for read data
         output = (TextView) view.findViewById(R.id.data_output);
 
-        // Get parent context and driver
+        // Get parent context and driver: This way we don't have to connect and disconnect on every fragment
         parentContext = (MainActivity) getActivity();
         driver = parentContext.driver;
 

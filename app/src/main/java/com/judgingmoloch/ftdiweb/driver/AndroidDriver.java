@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
@@ -49,26 +50,41 @@ public class AndroidDriver extends GenericDriver {
         }
     };
 
+    public void log(String msg) {
+        Log.d(TAG, ">==< " + msg + " >==<");
+    }
+
     public boolean connect() throws DeviceConnectionError {
         // Make sure the device is connected
         int devCount = d2xxManager.createDeviceInfoList(parentContext);
+        log("Number of devices: " + devCount);
+
         if (devCount < 2) {
+            log("Insufficient number of devices");
             return false;
         }
 
         // Open the device: Connect to the second port
-        if (ftDev == null) {
+        if (ftDev == null || !ftDev.isOpen()) {
+            log("Device is not open: Opening device...");
             ftDev = d2xxManager.openByIndex(parentContext, 1);
         }
 
         // Make sure the device is open, then start reading from it
+        if (ftDev == null) {
+            log("Device could not be opened.");
+            return false;
+        }
+
         if (ftDev.isOpen()) {
             if (!connected) {
                 readThread = new ReadThread(handler);
                 readThread.run();
                 connected = true;
+                log("Connected to device");
             }
         } else {
+            log("Device is not open.");
             ftDev = null;
             return false;
         }
@@ -78,6 +94,8 @@ public class AndroidDriver extends GenericDriver {
         ftDev.setBaudRate(BAUD_RATE);
         ftDev.setDataCharacteristics(DATA_BITS, STOP_BITS, PARITY);
         ftDev.setFlowControl(FLOW_CONTROL, (byte) 0x0b, (byte) 0x0d);
+
+        log("Successfully configured device.");
 
         // Return true, because nothing went wrong
         return true;
