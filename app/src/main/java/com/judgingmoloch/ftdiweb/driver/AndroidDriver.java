@@ -18,9 +18,6 @@ import java.util.List;
 
 public class AndroidDriver extends GenericDriver {
 
-    // For logging
-    private String TAG = "AndroidDriver";
-
     /* Receive and hold data from the RX buffer */
     List<Byte> byteBuffer = new ArrayList<>();
     private byte[] readData;
@@ -32,6 +29,8 @@ public class AndroidDriver extends GenericDriver {
     private byte PARITY = D2xxManager.FT_PARITY_NONE;
     private short FLOW_CONTROL = D2xxManager.FT_FLOW_NONE;
 
+    private long TIME_OUT = 2000; // Connection timeout, in milliseconds
+
     private boolean connected = false;
 
     /* Some variables for representing the context */
@@ -39,18 +38,19 @@ public class AndroidDriver extends GenericDriver {
     public Instructions instructions;
     public D2xxManager d2xxManager;
     public FT_Device ftDev;
-    public ReadThread readThread;
 
-    /* When data is read, add it to the byte buffer */
-    final Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            for (byte b : readData) {
-                byteBuffer.add(b);
-            }
+    public void set(String s, Object v) {
+        switch (s.toUpperCase()) {
+            case "BAUD_RATE": BAUD_RATE = (int) v; break;
+            case "DATA_BITS": DATA_BITS = (byte) v; break;
+            case "STOP_BITS": STOP_BITS = (byte) v; break;
+            case "PARITY": PARITY = (byte) v; break;
+            case "FLOW_CONTROL": FLOW_CONTROL = (short) v; break;
         }
-    };
+    }
 
     public void log(String msg) {
+        String TAG = "AndroidDriver";
         Log.d(TAG, ">==< " + msg + " >==<");
     }
 
@@ -78,13 +78,12 @@ public class AndroidDriver extends GenericDriver {
 
         if (ftDev.isOpen()) {
             if (!connected) {
-                readThread = new ReadThread(handler);
-                readThread.run();
                 connected = true;
-                log("Connected to device");
+                log("Opened device connection.");
             }
         } else {
             log("Device is not open.");
+            connected = false;
             ftDev = null;
             return false;
         }
@@ -135,6 +134,32 @@ public class AndroidDriver extends GenericDriver {
         }
     }
 
+    private boolean checkConnection() {
+        if (!connected) {
+            log("Not connected for writing. Connecting now...");
+            try {
+                connected = connect();
+                if (!connected) {
+                    log("Device could not be connected for writing.");
+                    return false;
+                }
+            } catch (DeviceConnectionError e) {
+                e.printStackTrace();
+                log("A connection error occured: " + e.getMessage());
+                return false;
+            }
+            purge();
+        }
+        return true;
+    }
+
+    public void purge() {
+        // Purge TX and RX buffers
+        ftDev.stopInTask();
+        ftDev.purge((byte) (D2xxManager.FT_PURGE_TX | D2xxManager.FT_PURGE_RX));
+        ftDev.restartInTask();
+    }
+
     /* -----------------------------------------------------------
      * Override these methods to implement the GenericDriver class
      * ----------------------------------------------------------- */
@@ -142,15 +167,7 @@ public class AndroidDriver extends GenericDriver {
     @Override
     protected boolean write(byte... b) {
         // Make sure the device is connected
-        if (!connected) {
-            try {
-                connected = connect();
-                if (!connected) return false;
-            } catch (DeviceConnectionError e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
+        if (!checkConnection()) return false;
 
         int written = -1;
 
@@ -159,63 +176,54 @@ public class AndroidDriver extends GenericDriver {
                 // Set the latency timer
                 ftDev.setLatencyTimer((byte) 16);
 
-                // Purge TX and RX buffers
-                ftDev.stopInTask();
-                ftDev.purge((byte) (D2xxManager.FT_PURGE_TX | D2xxManager.FT_PURGE_RX));
-                ftDev.restartInTask();
-
-                // Write the data
+                // Write the data: Returns the number of bytes written
                 written = ftDev.write(b, b.length, true);
+
+                log("Wrote " + written + " bytes: " + Utils.join(b));
             }
         } else {
+            if (ftDev == null) {
+                log("Device is NULL");
+            } else {
+                log("Device is not open");
+            }
             connected = false;
         }
 
-        return written == 0;
+        return written > 0;
     }
 
     @Override
     protected byte[] read(int length) {
-        /* Basically, return everything in the RX buffer */
-        byte[] b = new byte[byteBuffer.size()];
-        int i = 0;
-        for (Byte bb : byteBuffer) {
-            b[i++] = bb;
-        }
-        return b;
-    }
+        // Make sure device is connected
+        if (!checkConnection()) return new byte[length];
 
-    private class ReadThread extends Thread {
-        Handler mHandler;
+        long startTime = System.currentTimeMillis();
+        byte[] b = new byte[length];
 
-        ReadThread(Handler h) {
-            mHandler = h;
-            this.setPriority(Thread.MIN_PRIORITY);
-        }
-
-        @Override
-        public void run() {
-            try {
-                while (connected) {
+        // Read from the device
+        while (System.currentTimeMillis() - startTime < TIME_OUT) {
+            synchronized (ftDev) {
+                int b_available = ftDev.getQueueStatus();
+                if (b_available > 0) {
+                    ftDev.read(b, length, TIME_OUT);
+                } else {
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
-
-                    synchronized (ftDev) {
-                        int iavailable = ftDev.getQueueStatus();
-                        if (iavailable > 0) {
-                            readData = new byte[iavailable];
-                            ftDev.read(readData, iavailable);
-                            Message msg = mHandler.obtainMessage();
-                            mHandler.sendMessage(msg);
-                        }
+                        return new byte[length];
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
+
+        if (System.currentTimeMillis() - startTime > TIME_OUT) {
+            log("Failed to read from device");
+        } else {
+            log("Read: " + Utils.join(b));
+        }
+
+        return b;
     }
 }

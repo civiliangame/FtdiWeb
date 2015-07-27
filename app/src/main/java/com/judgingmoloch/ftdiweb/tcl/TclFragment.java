@@ -1,5 +1,6 @@
 package com.judgingmoloch.ftdiweb.tcl;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -59,11 +60,9 @@ public class TclFragment extends Fragment {
 
     public void run() {
         // Test out the driver
-        boolean b = driver.writeSingle(0x5000, 0xFACE);
-        byte[] r = driver.readRegister("CPU_ID_HI");
+        boolean b = driver.writeBurst(0x5000, 0x0123, 0x4567, 0x89AB, 0xCDEF);
+        byte[] r = driver.readBurst(0x5000, 4);
         output.setText("Wrote: " + b + " Read: " + Utils.join(r));
-//        byte[] r_data = a_driver.readBurst(0x7000, 8);
-//        name.setText(Utils.join(r_data));
     }
 
 }

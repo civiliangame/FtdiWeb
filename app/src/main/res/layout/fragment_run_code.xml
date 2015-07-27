@@ -40,15 +40,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Attempt at reverse compiling -->
-
-        <TextView
-            android:id="@+id/instruction_uncompile"
-            android:paddingBottom="20dp"
-            android:textSize="@dimen/default_text_size"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
         <!-- Holds connection status information -->
 
         <TextView

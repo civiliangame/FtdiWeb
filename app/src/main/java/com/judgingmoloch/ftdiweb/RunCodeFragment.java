@@ -1,12 +1,10 @@
 package com.judgingmoloch.ftdiweb;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +16,7 @@ import android.widget.Toast;
 
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
-import com.judgingmoloch.ftdiweb.compiler.FTDICompiler;
 import com.judgingmoloch.ftdiweb.connection.Instructions;
-import com.judgingmoloch.ftdiweb.driver.AndroidDriver;
 import com.judgingmoloch.ftdiweb.utils.Utils;
 
 public class RunCodeFragment extends Fragment {
@@ -68,7 +64,6 @@ public class RunCodeFragment extends Fragment {
     TextView name;
     TextView description;
     TextView body;
-    TextView uncompile;
     TextView connectionStatus;
     TextView statusText;
 
@@ -115,7 +110,6 @@ public class RunCodeFragment extends Fragment {
         name = (TextView) view.findViewById(R.id.instruction_name);
         description = (TextView) view.findViewById(R.id.instruction_description);
         body = (TextView) view.findViewById(R.id.instruction_body);
-        uncompile = (TextView) view.findViewById(R.id.instruction_uncompile);
         connectionStatus = (TextView) view.findViewById(R.id.connection_status);
         output = (TextView) view.findViewById(R.id.output);
         statusText = (TextView) view.findViewById(R.id.status_text);
@@ -221,7 +215,6 @@ public class RunCodeFragment extends Fragment {
         name.setText(instructions.name);
         description.setText(instructions.description);
         body.setText(instructions.body);
-        uncompile.setText(FTDICompiler.uncompile(instructions.body));
         connectionStatus.setText("Disconnected");
 
         // Runs when the "run" button is clicked
