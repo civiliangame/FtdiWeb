@@ -26,7 +26,6 @@ import com.judgingmoloch.ftdiweb.connection.ListAllFragment;
 import com.judgingmoloch.ftdiweb.driver.AndroidDriver;
 import com.judgingmoloch.ftdiweb.settings.Settings;
 import com.judgingmoloch.ftdiweb.settings.SettingsFragment;
-import com.judgingmoloch.ftdiweb.tcl.TclFragment;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -114,7 +113,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 newFragment = RunCodeFragment.newInstance();
                 break;
             case 3:
-                newFragment = TclFragment.newInstance();
+                newFragment = RunProgramFragment.newInstance();
                 break;
             default:
                 newFragment = ItemFragment.newInstance();

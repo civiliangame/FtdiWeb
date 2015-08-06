@@ -52,7 +52,7 @@ public class RunCodeFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             if (iavailable > 0) {
-                output.append(Utils.bytesToString(readData));
+                output.append(Utils.bytesToString(readData, true) + "\n");
             }
         }
     };

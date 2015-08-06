@@ -8,8 +8,8 @@ public abstract class GenericDriver {
     // Need to override these two methods to use this class
     // The idea is that regardless of the driver being used to connect to the openMSP430, it
     // can still be controlled normally
-    protected abstract boolean write(byte... b);
-    protected abstract byte[] read(int length);
+    public abstract boolean write(byte... b);
+    public abstract byte[] read(int length);
 
     public void printAllRegisters() {
         for (String reg : FTDICompiler.ADDRESSES) {

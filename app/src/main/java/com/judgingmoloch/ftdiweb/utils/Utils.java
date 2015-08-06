@@ -119,11 +119,25 @@ public class Utils {
     public static String bytesToString(byte[] b) {
         String s = "";
 
-        for (int i = 0; i < b.length; i++) {
-            s += String.format("%02x ", b[i]);
+        for (byte bb : b) {
+            s += String.format("%02x ", b);
         }
 
         return s;
+    }
+
+    public static String bytesToString(byte[] b, boolean ignore_blanks) {
+        if (ignore_blanks) {
+            String s = "";
+            for (byte bb : b) {
+                if (bb != 0) {
+                    s += String.format("%02x ", bb);
+                }
+            }
+            return s;
+        } else {
+            return bytesToString(b);
+        }
     }
 
     // Converts string to byte the correct way
@@ -140,5 +154,28 @@ public class Utils {
         }
 
         return r;
+    }
+
+    // Ignore 0x00 bytes
+    public static byte[] stringToBytes(String x, boolean ignore_blanks) {
+        byte[] r = stringToBytes(x);
+        if (ignore_blanks) {
+            int i = 0;
+            for (byte b : r) {
+                if (b != 0) {
+                    i++;
+                }
+            }
+            byte[] c = new byte[i];
+            i = 0;
+            for (byte b : r) {
+                if (b != 0) {
+                    c[i++] = b;
+                }
+            }
+            return c;
+        } else {
+            return r;
+        }
     }
 }

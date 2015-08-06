@@ -164,8 +164,16 @@ public class AndroidDriver extends GenericDriver {
      * Override these methods to implement the GenericDriver class
      * ----------------------------------------------------------- */
 
+    public boolean write(int... data) {
+        byte[] b = new byte[data.length];
+        for (int i = 0; i < data.length; i++) {
+            b[i] = (byte) data[i];
+        }
+        return write(b);
+    }
+
     @Override
-    protected boolean write(byte... b) {
+    public boolean write(byte... b) {
         // Make sure the device is connected
         if (!checkConnection()) return false;
 
@@ -194,7 +202,7 @@ public class AndroidDriver extends GenericDriver {
     }
 
     @Override
-    protected byte[] read(int length) {
+    public byte[] read(int length) {
         // Make sure device is connected
         if (!checkConnection()) return new byte[length];
 
