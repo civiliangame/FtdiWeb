@@ -8,8 +8,16 @@ public abstract class GenericDriver {
     // Need to override these two methods to use this class
     // The idea is that regardless of the driver being used to connect to the openMSP430, it
     // can still be controlled normally
-    public abstract boolean write(byte... b);
-    public abstract byte[] read(int length);
+    protected abstract boolean write(byte... b);
+    protected abstract byte[] read(int length);
+
+    public boolean write(int... data) {
+        byte[] b = new byte[data.length];
+        for (int i = 0; i < data.length; i++) {
+            b[i] = (byte) data[i];
+        }
+        return write(b);
+    }
 
     public void printAllRegisters() {
         for (String reg : FTDICompiler.ADDRESSES) {
@@ -51,9 +59,9 @@ public abstract class GenericDriver {
 
         if ((cmd & 0x40) == 0) { // 16 bit
             if (data.length > 1) {
-                return this.write(data[0], data[1]);
+                return this.write(data[0]) && this.write(data[1]);
             } else {
-                return this.write(data[0], (byte) 0x00);
+                return this.write(data[0]) && this.write((byte) 0x00);
             }
         } else { // 8 bit
             return this.write(data[0]);
@@ -103,9 +111,14 @@ public abstract class GenericDriver {
         return this.write(data);
     }
 
-    public byte[] readSingle(int startAddress) {
+    public byte[] readSingle(int startAddress, boolean memAccess) {
+        writeRegister("MEM_CNT", 0x00, 0x00);
         writeRegister("MEM_ADDR", startAddress);	// Put register to read from in MEM_ADDR
-        writeRegister("MEM_CTL", 0x01);				// Initiate read command
+        if (memAccess) {
+            writeRegister("MEM_CTL", 0x05);
+        } else {
+            writeRegister("MEM_CTL", 0x01);				// Initiate read command
+        }
         return readRegister("MEM_DATA");
     }
 
@@ -121,8 +134,7 @@ public abstract class GenericDriver {
 	 * ----------------------------------- */
 
     public boolean getDevice() {
-        writeRegister("CPU_CTL", 0x18); // Enable auto-freeze and software breakpoints
-        return true;
+        return writeRegister("CPU_CTL", 0x18); // Enable auto-freeze and software breakpoints
     }
 
     public boolean releaseDevice(int addr) {
@@ -209,6 +221,7 @@ public abstract class GenericDriver {
 
         // Perform PUC
         writeRegister("CPU_CTL", 0x60 | cpuCtlOrg);
+        try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
         writeRegister("CPU_CTL", cpuCtlOrg);
 
         // Check status: Make sure a PUC occurred and that the CPU is halted
@@ -224,6 +237,7 @@ public abstract class GenericDriver {
     public int getCpuId() {
         int cpuIdLo = Utils.toInt(readRegister("CPU_ID_LO"));
         int cpuIdHi = Utils.toInt(readRegister("CPU_ID_HI"));
+        int cpuNr = Utils.toInt(readRegister("CPU_NR"));
 
         return (cpuIdHi << 8) + cpuIdLo;
     }
@@ -254,6 +268,9 @@ public abstract class GenericDriver {
         }
         return numBrkUnits;
     }
+
+    // TODO SetHWBreak
+    // TODO ClearHWBreak
 
     public boolean isHalted() {
         int cpuStatVal = Utils.toInt(readRegister("CPU_STAT"));
