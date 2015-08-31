@@ -21,9 +21,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
 import com.ftdi.j2xx.D2xxManager;
+<<<<<<< HEAD
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+=======
+>>>>>>> 14d4689c422c844a25beca96bbf27f91c3e6f4cd
 import com.judgingmoloch.ftdiweb.connection.Instructions;
 import com.judgingmoloch.ftdiweb.connection.ListAllFragment;
 import com.judgingmoloch.ftdiweb.driver.AndroidDriver;
@@ -66,6 +69,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
         //graph something
         double[] xvals = {1.0, 2.0, 3.0, 4.0, 5.0};
         double[] yvals = {2.4, 3.2, 4.4, 2.5, 3.5};
@@ -81,6 +85,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         graph.addSeries(myLineGraphSeries);
 
+=======
+>>>>>>> 14d4689c422c844a25beca96bbf27f91c3e6f4cd
         // Turn off strict mode
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

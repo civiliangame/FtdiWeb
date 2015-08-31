@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/FtdiWeb-master.iml" filepath="$PROJECT_DIR$/FtdiWeb-master.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/FtdiWeb.iml" filepath="$PROJECT_DIR$/FtdiWeb.iml" />
+>>>>>>> 14d4689c422c844a25beca96bbf27f91c3e6f4cd
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
